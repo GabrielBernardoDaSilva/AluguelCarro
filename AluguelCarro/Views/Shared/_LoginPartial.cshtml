@@ -5,10 +5,11 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
+   
     <ul class="nav navbar-nav navbar-right">
         <li class="nav-item">
             <text class="text-white">Olá, @UserManager.GetUserName(User) - </text>
-            <a class="btn btn-link navbar-btn navbar-link " asp-controller="Usuario" asp-action="Logout">Logout</a>
+            <a class="btn btn-link navbar-btn navbar-link " asp-controller="Usuarios" asp-action="Logout">Logout</a>
         </li>
     </ul>
 }

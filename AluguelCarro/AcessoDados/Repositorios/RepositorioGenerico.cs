@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FichaAcademia.AcessoDados.Repositorios
 {
-    public class RepositorioGenerico<TEntity> : IRepositorioGenerico<TEntity> where TEntity : class
+    public abstract class RepositorioGenerico<TEntity> : IRepositorioGenerico<TEntity> where TEntity : class
     {
         protected readonly Contexto _contexto;
 

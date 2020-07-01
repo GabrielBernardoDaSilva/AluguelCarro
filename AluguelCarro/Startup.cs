@@ -40,6 +40,7 @@ namespace AluguelCarro
 
 
             services.AddScoped<INivelAcessoRepositorio, NivelAcessoRepositorio>();
+            services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
 
             services.AddDbContext<Contexto>(options =>
                 options.UseSqlServer(
