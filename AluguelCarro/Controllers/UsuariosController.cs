@@ -23,6 +23,12 @@ namespace AluguelCarro.Controllers
             _logger = logger;
         }
 
+        public async Task<IActionResult> Index()
+        {
+            _logger.LogInformation("Listando informações");
+            return View(await _usuarioRepositorio.PegarUsuarioLogado(User));
+        }
+
         public async Task<IActionResult> Registro()
         {
             if (User.Identity.IsAuthenticated)
@@ -63,7 +69,7 @@ namespace AluguelCarro.Controllers
 
                     await _usuarioRepositorio.EfetuarLogin(usuario, false);
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Usuarios");
 
                 }
                 _logger.LogError("Erro ao criar o usuario");
@@ -109,17 +115,60 @@ namespace AluguelCarro.Controllers
                 {
                     _logger.LogInformation("Informaçoes correta");
                     await _usuarioRepositorio.EfetuarLogin(usuario, false); ;
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Usuarios");
                 }
                 ModelState.AddModelError("", "Senha errada!");
             }
             return View(login);
         }
 
+
+        public async Task<IActionResult> Atualizar(string UsuarioId)
+        {
+            var usuario = await _usuarioRepositorio.PegarPeloId(UsuarioId);
+            var atualizarViewModel = new AtualizarViewModel()
+            {
+                UsuarioId = usuario.Id,
+                Nome = usuario.Nome,
+                CPF = usuario.CPF,
+                Email = usuario.Email,
+                NomeUsuario = usuario.UserName,
+                Telefone = usuario.Telefone
+
+            };
+
+            return View(atualizarViewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Atualizar(AtualizarViewModel atualizarViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var usuario = await _usuarioRepositorio.PegarPeloId(atualizarViewModel.UsuarioId);
+                if (usuario != null)
+                {
+                    usuario.Nome = atualizarViewModel.Nome;
+                    usuario.CPF = atualizarViewModel.CPF;
+                    usuario.Email = atualizarViewModel.Email;
+                    usuario.UserName = atualizarViewModel.NomeUsuario;
+                    usuario.Telefone = atualizarViewModel.Telefone;
+
+                    _logger.LogInformation("Atualizando ususarios");
+                    await _usuarioRepositorio.Atualizar(usuario);
+                    return RedirectToAction("Index", "Usuarios");
+                }
+            }
+            _logger.LogError("Informçoes invalidas");
+            return View(atualizarViewModel);
+        }
+
+
+
         public async Task<IActionResult> Logout()
         {
             await _usuarioRepositorio.EfetuarLogout();
-            return View("Login");
+            return RedirectToAction("Login", "Usuarios");
         }
     }
 }
