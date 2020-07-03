@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AluguelCarro.Models;
 using AluguelCarro.AcessoDados.Interfaces;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 
 namespace AluguelCarro.Controllers
 {
@@ -96,14 +97,7 @@ namespace AluguelCarro.Controllers
             return View(conta);
         }
 
-        [HttpPost]
-        public async Task<JsonResult> Delete(int id)
-        {
-            _logger.LogInformation("Excluindo conta");
-            await _contaRepositorio.Excluir(id);
-            _logger.LogInformation("Excluido");
-            return Json("Excluido com sucesso");
-        }
+
 
     
     }
